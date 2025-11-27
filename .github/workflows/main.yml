@@ -1,0 +1,31 @@
+name: Build Mac App
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: macos-latest  # Hier gebeurt de magie: dit draait op een Mac!
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: Install dependencies
+      run: |
+        pip install pandas openpyxl pyinstaller
+        
+    - name: Build with PyInstaller
+      run: |
+        # --onefile maakt er 1 bestand van
+        # --windowed zorgt dat er geen zwart terminal schermpje opent
+        pyinstaller --onefile --windowed merge_excel.py
+        
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: Mac-Applicatie
+        path: dist/merge_excel.app
