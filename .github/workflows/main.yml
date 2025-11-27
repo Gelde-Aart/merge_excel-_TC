@@ -1,31 +1,35 @@
-name: Build Mac App
+name: Bouw Mac App
 
-on: [push]
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: macos-latest  # Hier gebeurt de magie: dit draait op een Mac!
-    
+    runs-on: macos-latest
+
     steps:
-    - uses: actions/checkout@v3
-    
+    - uses: actions/checkout@v4
+
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5  # Update naar v5 voor de zekerheid
       with:
-        python-version: '3.9'
-        
-    - name: Install dependencies
+        python-version: '3.11' 
+
+    - name: Installeer benodigdheden
       run: |
-        pip install pandas openpyxl pyinstaller
-        
-    - name: Build with PyInstaller
+        pip install -r requirements.txt
+
+    - name: Bouw de App met PyInstaller
       run: |
-        # --onefile maakt er 1 bestand van
-        # --windowed zorgt dat er geen zwart terminal schermpje opent
-        pyinstaller --onefile --windowed merge_excel.py
-        
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v3
+        # --onefile: 1 bestand
+        # --windowed: geen zwart schermpje
+        # --name: de naam van je app
+        pyinstaller --onefile --windowed --name "ExcelMerger" merge_excel.py
+
+    - name: Upload het resultaat
+      uses: actions/upload-artifact@v4  # HIER ZAT HET PROBLEEM (Nu v4)
       with:
         name: Mac-Applicatie
-        path: dist/merge_excel.app
+        path: dist/ExcelMerger.app
