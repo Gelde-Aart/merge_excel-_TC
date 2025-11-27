@@ -32,4 +32,4 @@ jobs:
       uses: actions/upload-artifact@v4  # HIER ZAT HET PROBLEEM (Nu v4)
       with:
         name: ExcelMerger
-        path: dist/ExcelMerger.app
+        path: dist
